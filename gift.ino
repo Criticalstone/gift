@@ -5,17 +5,30 @@
 
    This example code is in the public domain.
 */
+#define SIZE 5
 #include <Bounce.h>
 
 int count = 0;
 int buttonPin = 5;
 int buttonvoltPin = 4;
 
+
 Bounce bouncer = Bounce(buttonPin, 5); 
+String texts[SIZE] = {"Merry Christmas shenmue151!",
+                   "This little box is full of happiness.", 
+                   "Even though it only has one button",
+                   "...",
+                   "(Don't tell him that, he may get upset)",
+                   "Source code can be found on github.com/criticalstone/"};
+
+int printDelays[SIZE] = {10,10,10,500,0};
+
+int delays[SIZE] = {0,300, 0, 400,0};
 
 void setup() {
   Serial.begin(9600);
   delay(1000);
+  
   pinMode(buttonPin, INPUT);
   pinMode(buttonvoltPin, OUTPUT);
 }
@@ -27,25 +40,14 @@ void loop() {
   printDel("....", 500);
   Keyboard.println();
   */
-  waitClick(buttonPin);
-  
-  printDel("Merry Christmas shenmue151!", 10);
-  Keyboard.println();
-  delay(1000);
-  printDel("This little box is full of happiness.", 10);
-  delay(300);
-  printDel("Even though it only has one button", 10);
-  printDel("...", 500);
-  delay(400);
-  Keyboard.println();
-  printDel("(Don't tell him that, he may get upset)", 10);
-  Keyboard.println();
-  delay(2000);
-  Keyboard.println();
+  for(int i = 0; i < SIZE; i++) {
+    printDel(texts[i], printDelays[i]);
+    Keyboard.println();
+    delay(delays[i]);
+  }
 
   waitHold(buttonPin, 1000);
-  printDel("You made it!!!", 10);
-
+  
 }
 
 void printDel(String string, int del) {
