@@ -5,25 +5,38 @@
 
    This example code is in the public domain.
 */
-#define SIZE 5
+#define SIZE 15
 #include <Bounce.h>
 
 int count = 0;
 int buttonPin = 5;
 int buttonvoltPin = 4;
 
+const int first = 13;
+const String NAME = "shenmue151";
 
 Bounce bouncer = Bounce(buttonPin, 5); 
-String texts[SIZE] = {"Merry Christmas shenmue151!",
-                   "This little box is full of happiness.", 
-                   "Even though it only has one button",
-                   "...",
-                   "(Don't tell him that, he may get upset)",
-                   "Source code can be found on github.com/criticalstone/"};
+String texts[SIZE] = {"Merry Christmas " + NAME + "!",
+                      "I am the little box of love, ", 
+                      "I only have one button, but that will not stop me!",
+                      "well, well",
+                      "The question is, what is my purpose?",
+                      "I am just a box, what can I do to make the world a better place?",
+                      "I know! I can travel the world and spread my deep deep looove!", 
+                      "The box itself is pretty robust and would probably be able to handle the stress very well",
+                      "We have one problem though", 
+                      "I can light, I can talk, I can think (I believe) and I do not need to breathe.",
+                      "But I can not move the tiniest bit by myself",
+                      "Would you pleease help me? :) :) :) :) :)",
+                      "Press me!",
 
-int printDelays[SIZE] = {10,10,10,500,0};
+                      "Source code can be found on github.com/criticalstone/gift",
+                      "Don't forget to tell my creator where I am by sending an email to Criticalstone. You can find his email on github."
+                      };
 
-int delays[SIZE] = {0,300, 0, 400,0};
+int printDelays[SIZE] = {10, 10, 10, 30, 10, 10, 10, 10, 30, 10, 10, 5, 10, 50};
+
+int delays[SIZE] = {300, 300, 1000, 1000, 300, 1000, 300, 300, 1000, 500, 0, 300, 0, 0};
 
 void setup() {
   Serial.begin(9600);
@@ -36,17 +49,17 @@ void setup() {
 void loop() {
   digitalWrite(buttonvoltPin, HIGH);
   
-  /*printDel("Press the button to continue, current document will be deleted", 10);
-  printDel("....", 500);
-  Keyboard.println();
-  */
-  for(int i = 0; i < SIZE; i++) {
+  waitClick(buttonPin);
+  
+  for(int i = 0; i < first; i++) {
     printDel(texts[i], printDelays[i]);
     Keyboard.println();
-    delay(delays[i]);
+    delay(6*delays[i]);
   }
 
   waitHold(buttonPin, 1000);
+
+  printDel(texts[first + 1], 10);
   
 }
 
