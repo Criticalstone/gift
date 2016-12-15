@@ -1,10 +1,3 @@
-/* Simple USB Keyboard Example
-   Teensy becomes a USB keyboard and types characters
-
-   You must select Keyboard from the "Tools > USB Type" menu
-
-   This example code is in the public domain.
-*/
 #define SIZE 20
 #include <Bounce.h>
 
