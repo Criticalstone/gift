@@ -5,19 +5,25 @@
 
    This example code is in the public domain.
 */
-#define SIZE 15
+#define SIZE 20
 #include <Bounce.h>
 
-int count = 0;
+int ledPin = 12;
 int buttonPin = 5;
 int buttonvoltPin = 4;
+
+int brightness = 0;
+int fadeAmount = 1;
+
+long lastTime = millis();
+long currentTime = millis();
 
 const int first = 13;
 const String NAME = "shenmue151";
 
 Bounce bouncer = Bounce(buttonPin, 5); 
 String texts[SIZE] = {"Merry Christmas " + NAME + "!",
-                      "I am the little box of love, ", 
+                      "I am the little christmas box, ", 
                       "I only have one button, but that will not stop me!",
                       "well, well",
                       "The question is, what is my purpose?",
@@ -28,15 +34,20 @@ String texts[SIZE] = {"Merry Christmas " + NAME + "!",
                       "I can light, I can talk, I can think (I believe) and I do not need to breathe.",
                       "But I can not move the tiniest bit by myself",
                       "Would you pleease help me? :) :) :) :) :)",
-                      "Press me!",
+                      "Press me to accept!",
 
+                      "Yay! Thank you!", 
+                      "All you have to do now is to either keep me for a while and make some cool modifications to me", 
+                      "(but keep my core functionality!) and then send me away to the next receiver.",
+                      "If you can't find someone to send it to, ",
+                      "either wait for next secret santa or send it back to my creator in Sweden",
                       "Source code can be found on github.com/criticalstone/gift",
                       "Don't forget to tell my creator where I am by sending an email to Criticalstone. You can find his email on github."
                       };
 
-int printDelays[SIZE] = {10, 10, 10, 30, 10, 10, 10, 10, 30, 10, 10, 5, 10, 50};
+int printDelays[SIZE] = {10, 10, 10, 30, 10, 10, 10, 10, 30, 10, 10, 5, 10 ,10, 10, 10, 10, 10, 10, 50};
 
-int delays[SIZE] = {300, 300, 1000, 1000, 300, 1000, 300, 300, 1000, 500, 0, 300, 0, 0};
+int delays[SIZE] = {300, 300, 1000, 1000, 300, 1000, 300, 300, 1000, 500, 0, 300, 0, 300, 0, 3000, 0, 2000, 1000, 1000};
 
 void setup() {
   Serial.begin(9600);
@@ -47,7 +58,9 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(buttonvoltPin, HIGH);
+  resetKeyboard();
+  resetMod();
+  digitalWrite(buttonvoltPin, HIGH);                    
   
   waitClick(buttonPin);
   
@@ -57,10 +70,13 @@ void loop() {
     delay(6*delays[i]);
   }
 
-  waitHold(buttonPin, 1000);
+  waitClick(buttonPin);
 
-  printDel(texts[first + 1], 10);
-  
+  for(int i = first; i < SIZE; i++) {
+    printDel(texts[i], printDelays[i]);
+    Keyboard.println();
+    delay(6*delays[i]);
+  }  
 }
 
 void printDel(String string, int del) {
@@ -122,16 +138,23 @@ void waitClick(int pin){
   bouncer.update();
   while (bouncer.read() == LOW) {
     bouncer.update();
+    updateLed();
   }
   while (bouncer.read() == HIGH) {
     bouncer.update();
+    updateLed();
   }
-  /*int reading = 0;
-  while (reading == LOW){
-    reading = digitalRead(buttonPin);
-  }
-  delay(50);
-  while (reading == HIGH){
-    reading = digitalRead(buttonPin);
-  }*/
 }
+
+void updateLed() {
+  currentTime = millis();
+  if (currentTime - lastTime > 5) {
+    analogWrite(ledPin, brightness);
+    brightness = brightness + fadeAmount;
+    if (brightness >= 255 || brightness <= 0) {
+      fadeAmount = -fadeAmount;
+    }
+    lastTime = currentTime;
+  }
+}
+
